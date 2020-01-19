@@ -1,0 +1,28 @@
+{
+  "name": "samplecaat",
+  "version": "1.0.0",
+  "description": "This repository is  trying the CaAT repotistory",
+  "main": "index.js",
+  "scripts": {
+    "login": "clasp login",
+    "init": "clasp create . --rootDir ./src",
+    "clone": "clasp clone",
+    "push": "clasp push",
+    "deploy": "clasp deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Silver-birder/SampleCaAT.git"
+  },
+  "author": "silverbirder <silverbirder@gmail.com> (https://silver-birder.github.io)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Silver-birder/SampleCaAT/issues"
+  },
+  "homepage": "https://github.com/Silver-birder/SampleCaAT#readme",
+  "dependencies": {
+    "@google/clasp": "^2.3.0",
+    "@types/google-apps-script": "^1.0.9"
+  }
+}
