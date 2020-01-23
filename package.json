@@ -21,8 +21,11 @@
     "url": "https://github.com/Silver-birder/SampleCaAT/issues"
   },
   "homepage": "https://github.com/Silver-birder/SampleCaAT#readme",
-  "dependencies": {
+  "devDependencies": {
     "@google/clasp": "^2.3.0",
-    "@types/google-apps-script": "^1.0.9"
+    "@types/google-apps-script": "^1.0.10"
+  },
+  "dependencies": {
+    "@silverbirder/caat": "^1.0.11"
   }
 }
