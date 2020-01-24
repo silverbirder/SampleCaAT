@@ -4,7 +4,7 @@
     "libraries": [{
       "userSymbol": "CaAT",
       "libraryId": "1E5lFJaOArnrreLD6qlnhUkbf76BOy8SmZtF7brH1yVhyu7U-E4fXBXT0",
-      "version": "2"
+      "version": "3"
     }]
   },
   "exceptionLogging": "STACKDRIVER"
