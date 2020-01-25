@@ -8,7 +8,7 @@ Bob's next week's schedule is:
 Bob wants to know the scheduled **assigned time** next week.
 However, Bob wants to exclude the time of **morning meeting, lunch time, and concentration time**.
 
-When this scripts(src/index.ts main) is executed, the following result is obtained.
+When this scripts(src/index.ts main function) is executed, the following result is obtained.
 ![sampleCaAT_spreatsheet](https://res.cloudinary.com/silverbirder/image/upload/v1579941128/CaAT/sampleCaAT_spreatsheet.png)
 
 |Event|Assign Time(h)|Reason|
