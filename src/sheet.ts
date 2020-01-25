@@ -8,7 +8,7 @@ export interface ILocation {
     value: string,
 }
 
-export function backupSheet() {
+export function backupSheet(): Sheet {
     // Prepare sheet
     const spreadSheet: Spreadsheet = getSpreadSheet();
     const templateSheet: Sheet = getTemplateSheet();
@@ -20,6 +20,7 @@ export function backupSheet() {
     }
     spreadSheet.setActiveSheet(templateSheet);
     spreadSheet.duplicateActiveSheet().setName(backupSheetName);
+    return spreadSheet.getSheetByName(backupSheetName);
 }
 
 export function getTemplateSheet(): Sheet {
@@ -41,7 +42,7 @@ export function getSpreadSheet(): Spreadsheet {
 }
 
 // ex. rangeStr: A2:A5 (Column must be the same)
-export function getValueByColumn(sheet: Sheet, rangeStr: string): Array<ILocation>{
+export function getValueByColumn(sheet: Sheet, rangeStr: string): Array<ILocation> {
     let nowRow: number = parseInt(rangeStr.slice(1, 2));
     let colName: string = rangeStr.slice(0, 1);
     const locationList: Array<ILocation> = [];
