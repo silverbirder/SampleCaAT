@@ -1,6 +1,6 @@
 import Sheet = GoogleAppsScript.Spreadsheet.Sheet;
 import Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
-import {getPreviousMonday} from "./utils";
+import {getPreviousMonday} from "./dateUtils";
 
 export interface ILocation {
     col: string,
@@ -57,4 +57,9 @@ export function getValueByColumn(sheet: Sheet, rangeStr: string): Array<ILocatio
         nowRow++;
     });
     return locationList;
+}
+
+export function getLastBottomRow(sheet: GoogleAppsScript.Spreadsheet.Sheet, cell: string): number {
+    const lastRow: number = sheet.getRange(cell).getNextDataCell(SpreadsheetApp.Direction.DOWN).getRow();
+    return lastRow - 1;
 }

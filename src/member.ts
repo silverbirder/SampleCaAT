@@ -1,5 +1,5 @@
 import * as CaAT from '@silverbirder/caat';
-import {copyDate} from './utils';
+import {copyDate} from './dateUtils';
 import {IMember} from "./index";
 
 export function getSchedules(members: Array<IMember>, startDate: Date, endDate: Date): Array<IMember> {

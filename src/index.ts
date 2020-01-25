@@ -1,6 +1,6 @@
 import * as CaAT from '@silverbirder/caat'
-import {getLastBottomRow, getLatestFriday, getLatestMonday} from './utils';
-import {backupSheet, getTemplateSheet, getValueByColumn, ILocation} from './sheet';
+import {getLatestFriday, getLatestMonday} from './dateUtils';
+import {backupSheet, getLastBottomRow, getTemplateSheet, getValueByColumn, ILocation} from './sheet';
 import {getSchedules} from './member';
 import {getHolidays} from './group';
 import Sheet = GoogleAppsScript.Spreadsheet.Sheet;
