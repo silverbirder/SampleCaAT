@@ -7,14 +7,15 @@ import Sheet = GoogleAppsScript.Spreadsheet.Sheet;
 
 const BASE_COL = 'A';
 const BASE_ROW = 2;
-
 const MON_COL = 'B';
 const TUE_COL = 'C';
 const WED_COL = 'D';
 const THU_COL = 'E';
 const FRI_COL = 'F';
-
 const ASSIGN_COL = 'G';
+const FULL_WORK_TIME_HOUR = 5;
+const MORNING_WORK_TIME_HOUR = 2;
+const AFTERNOON_WORK_TIME_HOUR = 3;
 
 export interface IMember extends ILocation {
     schedules?: Array<CaAT.ISchedule>,
@@ -41,14 +42,16 @@ function main() {
 
     members.forEach((member: IMember) => {
         const totalAssignMinutes: number = member.schedules.reduce((totalAssignMinutes: number, schedule: CaAT.ISchedule) => {
-            return totalAssignMinutes + schedule.originalAssignMinute;
+            return totalAssignMinutes + schedule.assignMinute;
         }, 0);
         member.holidays.forEach((holiday: CaAT.IHoliday) => {
             let reduceHour = 0;
             if (holiday.all) {
-                reduceHour = 5;
+                reduceHour = FULL_WORK_TIME_HOUR;
+            } else if (holiday.morning){
+                reduceHour = MORNING_WORK_TIME_HOUR;
             } else {
-                reduceHour = 2.5;
+                reduceHour = AFTERNOON_WORK_TIME_HOUR;
             }
             let targetCol = '';
             switch (holiday.toDate.getDay()) {
