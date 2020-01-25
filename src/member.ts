@@ -20,6 +20,28 @@ export function getSchedules(members: Array<IMember>, startDate: Date, endDate: 
 
     // Fetch the schedules!
     return members.map((member: IMember) => {
+        if (member.holidays) {
+            const range: Array<CaAT.IRange> = member.holidays.map((holiday: CaAT.IHoliday) => {
+                const t: Date = holiday.toDate;
+                if (holiday.all) {
+                    return {
+                        from: new Date(t.getFullYear(), t.getMonth(), t.getDate(), 0, 0, 0),
+                        to: new Date(t.getFullYear(), t.getMonth(), t.getDate(), 23, 59, 59),
+                    }
+                } else if (holiday.morning) {
+                    return {
+                        from: new Date(t.getFullYear(), t.getMonth(), t.getDate(), 0, 0, 0),
+                        to: new Date(t.getFullYear(), t.getMonth(), t.getDate(), 12, 0, 0),
+                    }
+                } else {
+                    return {
+                        from: new Date(t.getFullYear(), t.getMonth(), t.getDate(), 12, 0, 0),
+                        to: new Date(t.getFullYear(), t.getMonth(), t.getDate(), 23, 59, 59),
+                    }
+                }
+            });
+            memberConfig.cutTimeRange = memberConfig.cutTimeRange.concat(range);
+        }
         const caatMember: CaAT.IMember = new CaAT.Member(`${member.value}@gmail.com`, memberConfig);
         member.schedules = caatMember.fetchSchedules();
         return member;
