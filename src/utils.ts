@@ -22,3 +22,8 @@ export function skipDay(d: Date, skip: number): Date {
 export function copyDate(d: Date) {
     return new Date(d.getTime());
 }
+
+export function getLastBottomRow(sheet: GoogleAppsScript.Spreadsheet.Sheet, cell: string): number {
+    const lastRow: number = sheet.getRange(cell).getNextDataCell(SpreadsheetApp.Direction.DOWN).getRow();
+    return lastRow - 1;
+}
