@@ -2,6 +2,40 @@ import Sheet = GoogleAppsScript.Spreadsheet.Sheet;
 import Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
 import {getPreviousMonday} from "./dateUtils";
 
+export interface COL {
+    mon: string,
+    tue: string,
+    wed: string,
+    thu: string,
+    fri: string,
+    assign: string,
+    base: string
+}
+
+export interface ROW {
+    day: number,
+    base: number,
+}
+
+export function getColList(): COL {
+    return {
+        mon: 'B',
+        tue: 'C',
+        wed: 'D',
+        thu: 'E',
+        fri: 'F',
+        assign: 'G',
+        base: 'A',
+    }
+}
+
+export function getRowList(): ROW {
+    return {
+        day: 1,
+        base: 2,
+    }
+}
+
 export interface ILocation {
     col: string,
     row: number,
@@ -62,4 +96,18 @@ export function getValueByColumn(sheet: Sheet, rangeStr: string): Array<ILocatio
 export function getLastBottomRow(sheet: GoogleAppsScript.Spreadsheet.Sheet, cell: string): number {
     const lastRow: number = sheet.getRange(cell).getNextDataCell(SpreadsheetApp.Direction.DOWN).getRow();
     return lastRow - 1;
+}
+
+export function initSheet(sheet: Sheet, startDate: Date, defaultHour: number, bottomRow: number): void {
+    const col: COL = getColList();
+    const row: ROW = getRowList();
+    sheet.getRange(`${col.mon}${row.day}`).setValue(startDate);
+    for (let i = row.base; i <= bottomRow; i++) {
+        sheet.getRange(`${col.mon}${i}`).setValue(defaultHour);
+        sheet.getRange(`${col.tue}${i}`).setValue(defaultHour);
+        sheet.getRange(`${col.wed}${i}`).setValue(defaultHour);
+        sheet.getRange(`${col.thu}${i}`).setValue(defaultHour);
+        sheet.getRange(`${col.fri}${i}`).setValue(defaultHour);
+        sheet.getRange(`${col.assign}${i}`).setValue(0);
+    }
 }
