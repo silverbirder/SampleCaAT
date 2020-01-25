@@ -3,6 +3,16 @@ import {copyDate, getLatestMonday, getPreviousMonday, getLatestFriday} from "./u
 import Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
 import Sheet = GoogleAppsScript.Spreadsheet.Sheet;
 
+const BASE_COL = 'A';
+const BASE_ROW = 2;
+const ASSIGN_COL = 'G';
+
+interface IMemberLocation {
+    col: string,
+    row: number,
+    name: string,
+}
+
 function main() {
     // prepare property
     const spreadSheetId: string = PropertiesService.getScriptProperties().getProperty('SPREAD_SHEET_ID');
@@ -29,7 +39,7 @@ function main() {
     spreadSheet.setActiveSheet(templateSheet);
     spreadSheet.duplicateActiveSheet().setName(backupSheetName);
 
-    // Prepare member object
+    // Prepare CaAT member config
     const cutTimeRange: Array<CaAT.IRange> = [];
     for (const d = copyDate(nextMonday); d <= nextFriday; d.setDate(d.getDate() + 1)) {
         cutTimeRange.push({
@@ -44,11 +54,35 @@ function main() {
         cutTimeRange: cutTimeRange,
         ignore: new RegExp(null),
     };
-    const member: CaAT.IMember = new CaAT.Member('', config);
+
+    // Prepare member info
+    const lastBottomRow: number = getLastBottomRow(templateSheet, `${BASE_COL}${BASE_ROW}`);
+    const members: Array<IMemberLocation> = [];
+    let nowRow: number = BASE_ROW;
+    templateSheet.getRange(`${BASE_COL}${BASE_ROW}:${BASE_COL}${lastBottomRow}`)
+        .getValues().forEach((row: Array<string>) => {
+        row.forEach((col: string) => {
+            members.push({
+                col: BASE_COL,
+                row: nowRow,
+                name: col,
+            });
+        });
+        nowRow++;
+    });
 
     // Fetch the schedules!
-    const schedules: Array<CaAT.ISchedule> = member.fetchSchedules();
-    const totalAssignMinutes: number = schedules.reduce((totalAssignTime: number, schedule: CaAT.ISchedule): number => {
-        return totalAssignTime + schedule.assignMinute;
-    }, 0);
+    members.forEach((member: IMemberLocation) => {
+        const caatMember: CaAT.IMember = new CaAT.Member(`${member.name}@gmail.com`, config);
+        const schedules: Array<CaAT.ISchedule> = caatMember.fetchSchedules();
+        const totalAssignMinutes: number = schedules.reduce((totalAssignTime: number, schedule: CaAT.ISchedule): number => {
+            return totalAssignTime + schedule.assignMinute;
+        }, 0);
+        templateSheet.getRange(`${ASSIGN_COL}${member.row}`).setFormula(`=CEILING(${totalAssignMinutes/60}, 0.25)`);
+    })
+}
+
+function getLastBottomRow(sheet: GoogleAppsScript.Spreadsheet.Sheet, cell: string) {
+    const lastRow: number = sheet.getRange(cell).getNextDataCell(SpreadsheetApp.Direction.DOWN).getRow();
+    return lastRow - 1;
 }
