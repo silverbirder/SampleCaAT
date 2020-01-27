@@ -23,3 +23,15 @@ When this scripts(src/index.ts main function) is executed, the following result 
 |DepOps MTG|0.5|None|
 
 ※ 5 hours working per day. (2 hours is morning, 3 hours is afternoon)
+
+## Prepare
+
+Set the script properties.
+
+|property name|value|
+|---|---|
+|GROUP_ID|Google Calendar ID for getting the holiday)|
+|SPREAD_SHEET_ID|target spreadsheet id|
+|TEMPLATE_SHEET_NAME|sheet name for template|
+|MEMBER_${name}|To match the name in the Group Google Calendar title.<br> ※ name is member's Google Calendar ID (exclude "@...")|
+

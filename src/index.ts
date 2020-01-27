@@ -1,5 +1,5 @@
 import * as CaAT from '@silverbirder/caat'
-import {getLatestFriday, getLatestMonday} from './dateUtils';
+import {copyDate, getLatestFriday, getLatestMonday} from './dateUtils';
 import {
     backupSheet,
     COL,
@@ -46,7 +46,7 @@ function main() {
             return totalAssignMinutes + schedule.assignMinute;
         }, 0);
         member.holidays.forEach((holiday: CaAT.IHoliday) => {
-            let reduceHour = 0;
+            let reduceHour;
             if (holiday.all) {
                 reduceHour = FULL_WORK_TIME_HOUR;
             } else if (holiday.morning) {
@@ -54,26 +54,32 @@ function main() {
             } else {
                 reduceHour = AFTERNOON_WORK_TIME_HOUR;
             }
-            let targetCol = '';
-            switch (holiday.toDate.getDay()) {
-                case 1:
-                    targetCol = col.mon;
-                    break;
-                case 2:
-                    targetCol = col.thu;
-                    break;
-                case 3:
-                    targetCol = col.wed;
-                    break;
-                case 4:
-                    targetCol = col.thu;
-                    break;
-                case 5:
-                    targetCol = col.fri;
-                    break;
+            const movePoint: Date = copyDate(holiday.start);
+            while (movePoint.getTime() < holiday.end.getTime()) {
+                let targetCol = '';
+                switch (movePoint.getDay()) {
+                    case 1:
+                        targetCol = col.mon;
+                        break;
+                    case 2:
+                        targetCol = col.tue;
+                        break;
+                    case 3:
+                        targetCol = col.wed;
+                        break;
+                    case 4:
+                        targetCol = col.thu;
+                        break;
+                    case 5:
+                        targetCol = col.fri;
+                        break;
+                }
+                if (targetCol != '') {
+                    const remainHour: number = parseInt(templateSheet.getRange(`${targetCol}${member.row}`).getValue());
+                    templateSheet.getRange(`${targetCol}${member.row}`).setFormula(`=CEILING(${remainHour - reduceHour}, 0.25)`);
+                }
+                movePoint.setDate(movePoint.getDate() + 1);
             }
-            const remainHour: number = parseInt(templateSheet.getRange(`${targetCol}${member.row}`).getValue());
-            templateSheet.getRange(`${targetCol}${member.row}`).setFormula(`=CEILING(${remainHour - reduceHour}, 0.25)`);
         });
         templateSheet.getRange(`${col.assign}${member.row}`).setFormula(`=CEILING(${totalAssignMinutes / 60}, 0.25)`);
     });
