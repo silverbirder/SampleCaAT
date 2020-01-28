@@ -54,31 +54,27 @@ function main() {
             } else {
                 reduceHour = AFTERNOON_WORK_TIME_HOUR;
             }
-            const movePoint: Date = copyDate(holiday.start);
-            while (movePoint.getTime() < holiday.end.getTime()) {
-                let targetCol = '';
-                switch (movePoint.getDay()) {
-                    case 1:
-                        targetCol = col.mon;
-                        break;
-                    case 2:
-                        targetCol = col.tue;
-                        break;
-                    case 3:
-                        targetCol = col.wed;
-                        break;
-                    case 4:
-                        targetCol = col.thu;
-                        break;
-                    case 5:
-                        targetCol = col.fri;
-                        break;
-                }
-                if (targetCol != '') {
-                    const remainHour: number = parseInt(templateSheet.getRange(`${targetCol}${member.row}`).getValue());
-                    templateSheet.getRange(`${targetCol}${member.row}`).setFormula(`=CEILING(${remainHour - reduceHour}, 0.25)`);
-                }
-                movePoint.setDate(movePoint.getDate() + 1);
+            let targetCol = '';
+            switch (holiday.toDate.getDay()) {
+                case 1:
+                    targetCol = col.mon;
+                    break;
+                case 2:
+                    targetCol = col.tue;
+                    break;
+                case 3:
+                    targetCol = col.wed;
+                    break;
+                case 4:
+                    targetCol = col.thu;
+                    break;
+                case 5:
+                    targetCol = col.fri;
+                    break;
+            }
+            if (targetCol != '') {
+                const remainHour: number = parseInt(templateSheet.getRange(`${targetCol}${member.row}`).getValue());
+                templateSheet.getRange(`${targetCol}${member.row}`).setFormula(`=CEILING(${remainHour - reduceHour}, 0.25)`);
             }
         });
         templateSheet.getRange(`${col.assign}${member.row}`).setFormula(`=CEILING(${totalAssignMinutes / 60}, 0.25)`);
