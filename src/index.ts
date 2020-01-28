@@ -32,14 +32,16 @@ function main() {
     const col: COL = getColList();
     const row: ROW = getRowList();
     const lastBottomRow: number = getLastBottomRow(templateSheet, `${col.base}${row.base}`);
-    const nextMonday: Date = new Date(getLatestMonday().setHours(0, 0, 0));
-    const nextFriday: Date = new Date(getLatestFriday().setHours(23, 59, 59));
+    const nextMonday: Date = getLatestMonday();
+    const initMonday: Date = new Date(nextMonday.getFullYear(), nextMonday.getMonth(), nextMonday.getDate(), 0,0,0);
+    const nextFriday: Date = getLatestFriday();
+    const initFriday: Date = new Date(nextFriday.getFullYear(), nextFriday.getMonth(), nextFriday.getDate(), 23, 59, 59);
     let members: Array<ILocation> = getValueByColumn(templateSheet, `${col.base}${row.base}:${col.base}${lastBottomRow}`);
 
-    initSheet(templateSheet, nextMonday, FULL_WORK_TIME_HOUR, lastBottomRow);
+    initSheet(templateSheet, initMonday, FULL_WORK_TIME_HOUR, lastBottomRow);
 
-    members = getHolidays(members, nextMonday, nextFriday);
-    members = getSchedules(members, nextMonday, nextFriday);
+    members = getHolidays(members, initMonday, initFriday);
+    members = getSchedules(members, initMonday, initFriday);
 
     members.forEach((member: IMember) => {
         const totalAssignMinutes: number = member.schedules.reduce((totalAssignMinutes: number, schedule: CaAT.ISchedule) => {

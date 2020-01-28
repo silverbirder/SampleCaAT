@@ -26,6 +26,6 @@
     "@types/google-apps-script": "^1.0.10"
   },
   "dependencies": {
-    "@silverbirder/caat": "^1.0.15"
+    "@silverbirder/caat": "^1.0.16"
   }
 }
