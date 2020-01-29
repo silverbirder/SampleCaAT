@@ -1,6 +1,7 @@
 import * as CaAT from '@silverbirder/caat';
 import {copyDate} from './dateUtils';
 import {IMember} from "./index";
+import {IMemberConfig} from "@silverbirder/caat";
 
 export function getSchedules(members: Array<IMember>, startDate: Date, endDate: Date): Array<IMember> {
     const cutTimeRange: Array<CaAT.IRange> = [];
@@ -20,6 +21,7 @@ export function getSchedules(members: Array<IMember>, startDate: Date, endDate: 
 
     // Fetch the schedules!
     return members.map((member: IMember) => {
+        const cMemberConfig: IMemberConfig = Object.create(memberConfig);
         if (member.holidays) {
             const range: Array<CaAT.IRange> = member.holidays.map((holiday: CaAT.IHoliday) => {
                 const t: Date = holiday.toDate;
@@ -40,9 +42,9 @@ export function getSchedules(members: Array<IMember>, startDate: Date, endDate: 
                     }
                 }
             });
-            memberConfig.cutTimeRange = memberConfig.cutTimeRange.concat(range);
+            cMemberConfig.cutTimeRange = cMemberConfig.cutTimeRange.concat(range);
         }
-        const caatMember: CaAT.IMember = new CaAT.Member(`${member.value}@gmail.com`, memberConfig);
+        const caatMember: CaAT.IMember = new CaAT.Member(`${member.value}@gmail.com`, cMemberConfig);
         member.schedules = caatMember.fetchSchedules();
         return member;
     })
